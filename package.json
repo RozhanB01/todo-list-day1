@@ -1,0 +1,6 @@
+{
+  "name": "roznex-ai-company-os-static",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": { "start": "node server.js" }
+}
