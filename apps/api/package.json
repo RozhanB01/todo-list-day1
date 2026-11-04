@@ -1,0 +1,37 @@
+{
+  "name": "@moonberry/api",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "seed": "tsx src/seed.ts",
+    "db:push": "prisma db push --skip-generate",
+    "typecheck": "tsc --noEmit"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "5.22.0",
+    "bcryptjs": "2.4.3",
+    "cookie-parser": "1.4.7",
+    "express": "4.21.2",
+    "jsonwebtoken": "9.0.2",
+    "multer": "1.4.5-lts.1",
+    "sanitize-html": "2.13.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "2.4.6",
+    "@types/cookie-parser": "1.4.8",
+    "@types/express": "4.17.21",
+    "@types/jsonwebtoken": "9.0.7",
+    "@types/multer": "1.4.12",
+    "@types/node": "22.9.0",
+    "@types/sanitize-html": "2.13.0",
+    "prisma": "5.22.0",
+    "tsx": "4.19.2",
+    "typescript": "5.6.3"
+  }
+}
