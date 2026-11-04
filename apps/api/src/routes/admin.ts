@@ -180,6 +180,24 @@ adminRouter.get('/overview', async (_req, res, next) => {
   }
 })
 
+adminRouter.get('/messages', async (_req, res, next) => {
+  try {
+    const messages = await prisma.message.findMany({ orderBy: { createdAt: 'desc' }, take: 50 })
+    res.json({ messages })
+  } catch (error) {
+    next(error)
+  }
+})
+
+adminRouter.patch('/messages/:id', async (req, res, next) => {
+  try {
+    await prisma.message.update({ where: { id: req.params.id }, data: { read: true } })
+    res.json({ ok: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
 adminRouter.get('/novels', async (_req, res, next) => {
   try {
     const novels = await prisma.novel.findMany({

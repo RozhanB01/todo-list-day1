@@ -1,0 +1,23 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/api/health",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "SESSION_SECRET",
+      "description": "کلید امضای نشست‌های خوانندگان (دست‌کم ۱۶ نویسه). در محیط توسعه به‌صورت خودکار ساخته شده است.",
+      "requiredAtBoot": true,
+      "generatedForDevelopment": true
+    },
+    {
+      "name": "ADMIN_EMAIL",
+      "description": "ایمیل حساب نویسنده/مدیر. هنگام seed، این حساب با نقش ADMIN ساخته یا به‌روزرسانی می‌شود و ثبت‌نام با همین ایمیل هم نقش مدیر می‌گیرد.",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "ADMIN_PASSWORD",
+      "description": "گذرواژهٔ حساب نویسنده (دست‌کم ۸ نویسه). برای ساخت اولیهٔ حساب مدیر لازم است؛ از داشبورد Secrets قابل تغییر است.",
+      "requiredAtBoot": false
+    }
+  ]
+}

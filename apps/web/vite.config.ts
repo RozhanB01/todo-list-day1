@@ -26,8 +26,9 @@ export default defineConfig({
     proxy: {
       '/api': { target: apiTarget, changeOrigin: true },
       '/uploads': { target: apiTarget, changeOrigin: true },
-      '/sitemap.xml': { target: apiTarget, changeOrigin: true },
-      '/robots.txt': { target: apiTarget, changeOrigin: true },
+      // keep the public Host so generated sitemap/robots URLs point at this site
+      '/sitemap.xml': { target: apiTarget, changeOrigin: false },
+      '/robots.txt': { target: apiTarget, changeOrigin: false },
     },
     watch: {
       usePolling: true,

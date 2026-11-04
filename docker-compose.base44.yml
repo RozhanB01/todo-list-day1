@@ -28,6 +28,7 @@ services:
       - sh
       - -ec
       - |
+        npx prisma generate
         npx prisma db push --skip-generate
         exec npx tsx watch src/index.ts
     environment:

@@ -211,6 +211,25 @@ publicRouter.get('/recommend', async (req, res, next) => {
 })
 
 /** Real view counter, de-duplicated per visitor and chapter for six hours. */
+publicRouter.post('/messages', async (req, res, next) => {
+  try {
+    const name = String(req.body?.name || '').trim()
+    const email = String(req.body?.email || '').trim().toLowerCase()
+    const body = String(req.body?.body || '').trim()
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (name.length < 2) return res.status(400).json({ error: 'یک نام برای خودت بنویس.' })
+    if (!EMAIL_RE.test(email)) return res.status(400).json({ error: 'ایمیلت را درست بنویس تا بتوانم جواب بدهم.' })
+    if (body.length < 10) return res.status(400).json({ error: 'نامه‌ات کمی کوتاه است؛ چند جمله بیشتر بنویس.' })
+    if (body.length > 4000) return res.status(400).json({ error: 'نامه خیلی بلند شد؛ کمی کوتاهش کن.' })
+
+    await prisma.message.create({ data: { name, email, body } })
+    res.status(201).json({ ok: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
 publicRouter.post('/novels/:id/views', async (req: AuthedRequest, res, next) => {
   try {
     const novelId = req.params.id

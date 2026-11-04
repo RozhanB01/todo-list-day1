@@ -92,7 +92,7 @@ body {
   }
 
   .muted {
-    @apply text-ink/65;
+    @apply text-ink/60;
   }
 
   .skeleton {
@@ -107,7 +107,7 @@ body {
   }
 
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-plum/12 bg-vanilla/70 px-3 py-1 text-xs text-ink/75 transition;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-plum/12 bg-vanilla/70 px-3 py-1 text-xs text-ink/70 transition;
   }
 
   .chip-active {

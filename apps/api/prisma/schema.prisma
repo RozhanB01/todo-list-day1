@@ -172,6 +172,19 @@ model ReadingProgress {
   @@map("reading_progress")
 }
 
+/// Notes readers send to the author from the contact page.
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  body      String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("messages")
+}
+
 /// One row per anonymous/signed-in visit, used for real reading statistics only.
 model NovelView {
   id         String   @id @default(cuid())
