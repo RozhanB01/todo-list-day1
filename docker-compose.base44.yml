@@ -77,10 +77,10 @@ services:
     depends_on:
       api:
         condition: service_healthy
+    # One-shot setup job: it seeds demo content and exits 0 on purpose, so it is
+    # deliberately NOT labelled as a Base44 project (a `worker` project is expected
+    # to keep running, and this one completing is success, not a failure).
     restart: 'no'
-    labels:
-      base44.project: 'Moonberry'
-      base44.kind: 'worker'
 
   web:
     build:
