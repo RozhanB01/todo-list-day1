@@ -62,6 +62,9 @@ services:
       base44.port: '4000'
 
   seed:
+    # Opt-in setup job. Keeping it out of the default compose profile prevents its
+    # successful exit from being reported as an unhealthy long-running service.
+    profiles: ['seed']
     build:
       context: ./apps/api
     working_dir: /app

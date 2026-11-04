@@ -7,12 +7,12 @@ Non-obvious things about this repo. Read `README.md` first for the product overv
 - Single public origin: **host port 3000 → `web` (Vite dev server, 5173)**.
   Vite proxies `/api`, `/uploads`, `/sitemap.xml`, `/robots.txt` to `api:4000`.
   Do not expose the API on a second public port; cookies are same-origin by design.
-- `db` = postgres:16 with a named volume. `seed` is a one-shot service that runs after
-  `api` is healthy and exits 0. `api` runs `prisma generate` + `prisma db push` on every boot.
-- `seed` deliberately carries **no** `base44.*` labels: a labelled `worker` project is expected
-  to stay up, so an exited (successful) seed reads as a failed service. It is a setup job, not
-  a previewable project — keep the labels off it, and don't gate `web` on it (content is optional
-  for the site to render).
+- `db` = postgres:16 with a named volume. `seed` is an opt-in, one-shot service that runs after
+  `api` is healthy and exits 0; invoke it explicitly with `docker compose -f docker-compose.base44.yml --profile seed up seed`.
+  It stays out of the default profile so its intentional exit is never reported as an unhealthy runtime service.
+  `api` runs `prisma generate` + `prisma db push` on every boot.
+- `seed` deliberately carries **no** `base44.*` labels: it is a setup job, not a previewable project.
+  Do not gate `web` on it (content is optional for the site to render).
 - The browser bundle is built from `apps/web`; the legacy root `index.html` / `sw.js` /
   `manifest.webmanifest` belong to an older static site and are not served by Vite.
 
