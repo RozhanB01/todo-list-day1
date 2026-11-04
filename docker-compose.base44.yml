@@ -1,0 +1,27 @@
+services:
+  web:
+    image: python:3.12-slim
+    working_dir: /app
+    command:
+      ["python", "-m", "http.server", "3000", "--bind", "0.0.0.0", "--directory", "/app"]
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    restart: on-failure
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - |
+          import sys, urllib.request
+          try:
+              sys.exit(0 if urllib.request.urlopen("http://127.0.0.1:3000/index.html", timeout=3).status == 200 else 1)
+          except Exception as exc:
+              print("healthcheck failed:", exc)
+              sys.exit(1)
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s

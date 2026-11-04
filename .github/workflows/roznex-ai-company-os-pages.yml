@@ -14,8 +14,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages-roznex-ai-company-os"
-  cancel-in-progress: true
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   deploy:

@@ -1,32 +1,77 @@
 name: Deploy HB Lex to GitHub Pages
+
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
   group: "pages"
   cancel-in-progress: false
+
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify static site files
+        run: |
+          set -euo pipefail
+          missing=0
+          for f in index.html sw.js manifest.webmanifest hb-lex-mark.svg; do
+            if [ ! -s "$f" ]; then
+              echo "::error file=$f::Missing or empty required site file: $f"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ]
+
+      # Runs before the Pages setup step so the site artifact is always
+      # packaged and verified, even when the Pages site is not configured yet.
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
   deploy:
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      # actions/configure-pages cannot create the Pages site with the workflow
+      # GITHUB_TOKEN ("Resource not accessible by integration"), so report the
+      # missing one-time repository setting clearly instead.
+      - name: Check GitHub Pages is enabled
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          status=$(curl -sS -o /dev/null -w '%{http_code}' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPO/pages")
+          if [ "$status" = "404" ]; then
+            echo "::error::GitHub Pages is not enabled for $REPO. Enable it once in Settings → Pages → Build and deployment → Source: GitHub Actions, then re-run this workflow."
+            exit 1
+          fi
+          if [ "$status" != "200" ]; then
+            echo "::error::Could not read the Pages configuration for $REPO (HTTP $status)."
+            exit 1
+          fi
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
-      - name: Upload site
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
+
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
